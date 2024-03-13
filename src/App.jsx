@@ -61,7 +61,7 @@ const SongDetails = ({ songs, title }) => {
 const Cities = ({ cities, name }) => {
   const cityDetails = cities.find((city) => city.name === name);
   return (
-    <div>
+    <div key={cityDetails.id}>
       <h2>Population of the city named {name}</h2>
       {cityDetails.population}
     </div>
@@ -101,34 +101,61 @@ const Student = ({ students, name }) => {
 //8. Given an array of objects representing orders, write a React component to find and display all the details of the order for customer "Alice Smith". Pass the data as props.
 
 const Orders = ({ orders, name }) => {
-  const {customer, totalAmount, products} = orders.find((order) => order.customer === name);
+  const { customer, totalAmount, products } = orders.find(
+    (order) => order.customer === name,
+  );
 
-  const productsList = products.map(product => (
-    <p>Name: {product.name} - Quantity: {product.quantity}</p>
-      ))
+  const productsList = products.map((product) => (
+    <p key={product.id}>
+      Name: {product.name} - Quantity: {product.quantity}
+    </p>
+  ));
 
   return (
     <div>
-    <h2>Product Details</h2>
+      <h2>Product Details</h2>
       <p>Name: {customer}</p>
       <p>Total Amount: {totalAmount}</p>
       <h4>Products</h4>
       {productsList}
     </div>
-  )
-  };
+  );
+};
 
 //9. Given an array of objects representing employees, write a React component to find and display all the details of the employee with ID 1. Pass the data as props.
 
-const employees = [
+const Employee = ({ employees, id }) => {
+  const {
+    name,
+    position,
+    department: { name: departmentName, location },
+  } = employees.find((emp) => emp.id === id);
 
-  { id: 1, name: "Jane Doe", position: "Software Engineer", department: { name: "Engineering", location: "Building A" } },
+  return (
+    <div>
+      <h2>Employee Details</h2>
+      <p>Name: {name}</p>
+      <p>Position: {position}</p>
+      <p>Department: {departmentName}</p>
+      <p>Location: {location}</p>
+    </div>
+  );
+};
 
-  { id: 2, name: "Sam Smith", position: "Marketing Manager", department: { name: "Marketing", location: "Building B" } },
+//10. Write a React component to calculate and display the total number of items in stock.
 
-  { id: 3, name: "Mike Johnson", position: "HR Specialist", department: { name: "Human Resources", location: "Building C" } },
+const Store = ({ store }) => {
+  const totalItems = store.categories.filter(
+    (item) => item.itemDetail.inStock,
+  ).length;
 
-];
+  return (
+    <div>
+      <h2>Item Details</h2>
+      <p>Number of items in stock: {totalItems}</p>
+    </div>
+  );
+};
 
 export default function App() {
   const exercises = [
@@ -181,7 +208,6 @@ export default function App() {
     { id: 3, name: "Headphones", price: 60 },
   ];
 
-
   const orders = [
     {
       id: 1,
@@ -230,6 +256,47 @@ export default function App() {
     },
   ];
 
+  const employees = [
+    {
+      id: 1,
+      name: "Jane Doe",
+      position: "Software Engineer",
+      department: { name: "Engineering", location: "Building A" },
+    },
+    {
+      id: 2,
+      name: "Sam Smith",
+      position: "Marketing Manager",
+      department: { name: "Marketing", location: "Building B" },
+    },
+    {
+      id: 3,
+      name: "Mike Johnson",
+      position: "HR Specialist",
+      department: { name: "Human Resources", location: "Building C" },
+    },
+  ];
+
+  const store = {
+    name: "Tech Emporium",
+    categories: [
+      {
+        id: 1,
+        name: "Electronics",
+        itemDetail: { id: 101, product: "Laptop", inStock: true },
+      },
+      {
+        id: 2,
+        name: "Accessories",
+        itemDetail: { id: 201, product: "Headphones", inStock: true },
+      },
+      {
+        id: 3,
+        name: "Electronics",
+        itemDetail: { id: 301, product: "Heater", inStock: false },
+      },
+    ],
+  };
 
   return (
     <main>
@@ -248,7 +315,10 @@ export default function App() {
       <Student students={students} name="Charlie" />
       <hr />
       <Orders orders={orders} name="Alice Smith" />
-      <hr/>
+      <hr />
+      <Employee employees={employees} id={1} />
+      <hr />
+      <Store store={store} />
     </main>
   );
 }
